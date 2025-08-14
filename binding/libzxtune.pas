@@ -45,28 +45,6 @@ var
   ZXTune_GetModuleInfo: function(module: ZXTuneHandle; var info: ZXTuneModuleInfo): Boolean; cdecl;
 
 
-
-  ZXTune_GetInfo: function(player: ZXTuneHandle; paramName: PAnsiChar; buffer: PAnsiChar; bufferSize: NativeUInt): LongBool; cdecl;
-  {var
-  Player: Pointer;  // ZXTuneHandle
-  ParamName: PAnsiChar;
-  Buffer: array[0..255] of AnsiChar; // Буфер на 256 символов
-  Success: Boolean;
-begin
-  Player := ZXTune_CreatePlayer(...); // Создаем плеер
-  ParamName := 'title'; // Параметр, который хотим получить
-
-  // Вызываем функцию
-  Success := ZXTune_GetInfo(Player, ParamName, @Buffer[0], Length(Buffer));
-
-  if Success then
-    WriteLn('Info: ', Buffer)
-  else
-    WriteLn('Failed to get info');
-end;}
-
-
-
   ZXTune_CreatePlayer: function(module: ZXTuneHandle): ZXTuneHandle; cdecl;
   ZXTune_DestroyPlayer: procedure(player: ZXTuneHandle); cdecl;
 

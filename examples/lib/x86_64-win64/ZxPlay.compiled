@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Compiler Value="/home/vadim/fpcupdeluxe/fpcupdeluxe/fpc/bin/x86_64-linux/fpc.sh" Date="1754571970"/>
+  <Params Value="-Twin64 -MObjFPC -Scghi -O1 -gw3 -gl -l -vewnhibq -Fi/home/vadim/Проекты/zxTunePascal/examples/lib/x86_64-win64 -Fl/home/vadim/Проекты/ray4laz/libs/x86_64-win64 -Fu/home/vadim/Проекты/zxTunePascal/examples/ -Fu/home/vadim/Проекты/zxTunePascal/binding -Fu/home/vadim/Проекты/ray4laz/package/lib/x86_64-win64 -Fu/home/vadim/fpcupdeluxe/fpcupdeluxe/lazarus/packager/units/x86_64-win64 -FU/home/vadim/Проекты/zxTunePascal/examples/lib/x86_64-win64/ -FE/home/vadim/Проекты/zxTunePascal/examples/bin/ -o/home/vadim/Проекты/zxTunePascal/examples/bin/ZxPlay.exe ZxPlay.lpr"/>
+</CONFIG>

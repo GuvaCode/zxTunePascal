@@ -401,7 +401,7 @@ bool ZXTune_ResetSound(ZXTuneHandle player)
   }
 }
 
-bool ZXTune_GetPlayerParameterInt(ZXTuneHandle player, const char* paramName, int* paramValue)
+bool ZXTune_GetPlayerParameterInt(ZXTuneHandle player, const char* paramName, int paramValue)
 {
   try
   {
@@ -414,7 +414,7 @@ bool ZXTune_GetPlayerParameterInt(ZXTuneHandle player, const char* paramName, in
     {
       return false;
     }
-    *paramValue = static_cast<int>(value);
+    paramValue = static_cast<int>(value);
     return true;
   }
   catch (const Error&)
@@ -446,32 +446,4 @@ bool ZXTune_SetPlayerParameterInt(ZXTuneHandle player, const char* paramName, in
     return false;
   }
 }
-ZXTUNE_API bool ZXTune_GetInfo(ZXTuneHandle player, const char* paramName, char* buffer, size_t bufferSize)
-{
-    try
-    {
-        const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
-        const Parameters::Accessor::Ptr props = wrapper->GetParameters();
-        String res;
-        if (!props->FindValue(paramName, res))
-        {
-            return false; // Параметр не найден
-        }
 
-        // Копируем строку в буфер, избегая переполнения
-        if (buffer && bufferSize > 0)
-        {
-            strncpy(buffer, res.c_str(), bufferSize - 1);
-            buffer[bufferSize - 1] = '\0'; // Гарантируем null-terminated строку
-        }
-        return true;
-    }
-    catch (const Error&)
-    {
-        return false;
-    }
-    catch (const std::exception&)
-    {
-        return false;
-    }
-}
