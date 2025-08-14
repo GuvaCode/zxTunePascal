@@ -10,12 +10,12 @@ uses
 
 const
   {$IFDEF MSWINDOWS}
-  DEFAULT_LIB_NAME = 'zxtune.dll';
+  library_name = 'libzxtune.dll';
   {$ELSE}
   {$IFDEF DARWIN}
-  DEFAULT_LIB_NAME = 'libzxtune.dylib';
+  library_name = 'libzxtune.dylib';
   {$ELSE}
-  DEFAULT_LIB_NAME = 'libzxtune.so';
+  library_name = 'libzxtune.so';
   {$ENDIF}
   {$ENDIF}
 
@@ -53,13 +53,13 @@ var
   ZXTune_SeekSound: function(player: ZXTuneHandle; sample: NativeUInt): Integer; cdecl;
   ZXTune_ResetSound: function(player: ZXTuneHandle): Boolean; cdecl;
 
-  ZXTune_GetPlayerParameterInt: function(player: ZXTuneHandle; paramName: PAnsiChar; var paramValue: PInteger): Boolean; cdecl;
+  ZXTune_GetPlayerParameterInt: function(player: ZXTuneHandle; paramName: PAnsiChar; var paramValue: Integer): Boolean; cdecl;
   ZXTune_SetPlayerParameterInt: function(player: ZXTuneHandle; paramName: PAnsiChar; paramValue: Integer): Boolean; cdecl;
 
   ZXTune_GetCurrentPosition: function(player: ZXTuneHandle): NativeUInt; cdecl;
   ZXTune_GetDuration: function(player: ZXTuneHandle): LongInt; cdecl;
 
-procedure LoadZXTuneLibrary(const LibraryName: string = DEFAULT_LIB_NAME);
+procedure LoadZXTuneLibrary(const LibraryName: string = library_name);
 function ZXTuneLoaded: Boolean;
 
 implementation
