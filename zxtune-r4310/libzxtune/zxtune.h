@@ -68,7 +68,7 @@ ZXTUNE_API bool ZXTune_ResetSound(ZXTuneHandle player);
 ZXTUNE_API bool ZXTune_GetPlayerParameterInt(ZXTuneHandle player, const char* paramName, int* paramValue);
 ZXTUNE_API bool ZXTune_SetPlayerParameterInt(ZXTuneHandle player, const char* paramName, int paramValue);
 
-ZXTUNE_API std::string ZXTune_GetInfo(ZXTuneHandle player, std::string paramName);
+ZXTUNE_API bool ZXTune_GetInfo(ZXTuneHandle player, const char* paramName, char* buffer, size_t bufferSize);
 ZXTUNE_API long ZXTune_GetDuration(ZXTuneHandle player);
 ZXTUNE_API size_t ZXTune_GetCurrentPosition(ZXTuneHandle player);  
 

@@ -446,37 +446,32 @@ bool ZXTune_SetPlayerParameterInt(ZXTuneHandle player, const char* paramName, in
     return false;
   }
 }
-std::string ZXTune_GetInfo(ZXTuneHandle player, std::string paramName)
+ZXTUNE_API bool ZXTune_GetInfo(ZXTuneHandle player, const char* paramName, char* buffer, size_t bufferSize)
 {
-    const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
-    const Parameters::Accessor::Ptr props = wrapper->GetParameters();
-    String res;
-    props->FindValue(paramName, res);
-    return res;
-}
-ZXTUNE_API long ZXTune_GetDuration(ZXTuneHandle player)
-{
-    const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
-    const Parameters::Accessor::Ptr props = wrapper->GetParameters();
-    Parameters::IntType frameDuration = Parameters::ZXTune::Sound::FRAMEDURATION_DEFAULT;
-    props->FindValue(Parameters::ZXTune::Sound::FRAMEDURATION, frameDuration);
-    return frameDuration;
-}
+    try
+    {
+        const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
+        const Parameters::Accessor::Ptr props = wrapper->GetParameters();
+        String res;
+        if (!props->FindValue(paramName, res))
+        {
+            return false; // Параметр не найден
+        }
 
-// Add this at the end of the file, before the last closing brace
-size_t ZXTune_GetCurrentPosition(ZXTuneHandle player)
-{
-  try
-  {
-    const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
-    return wrapper->GetBuffer()->GetCurrentSample();
-  }
-  catch (const Error&)
-  {
-    return 0;
-  }
-  catch (const std::exception&)
-  {
-    return 0;
-  }
+        // Копируем строку в буфер, избегая переполнения
+        if (buffer && bufferSize > 0)
+        {
+            strncpy(buffer, res.c_str(), bufferSize - 1);
+            buffer[bufferSize - 1] = '\0'; // Гарантируем null-terminated строку
+        }
+        return true;
+    }
+    catch (const Error&)
+    {
+        return false;
+    }
+    catch (const std::exception&)
+    {
+        return false;
+    }
 }
