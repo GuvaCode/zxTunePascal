@@ -13,7 +13,7 @@ const
   DEFAULT_BITS = 16;
   DEFAULT_CHANNELS = 2;
   BUFFER_SIZE = 8192;
-  DEFAULT_FRAME_DURATION = 20000; // 20ms in microseconds
+
   POSITION_UPDATE_INTERVAL = 100; // ms
   PROGRESS_BAR_WIDTH = 30; // Ширина полоски прогресса
 
@@ -50,7 +50,7 @@ begin
   {$ENDIF}
 
 
-  LoadZXTuneLibrary(folder + libZxTune.library_name);
+  LoadZXTuneLibrary(folder + libZxTune.DEFAULT_LIB_NAME);
 end;
 
 procedure LoadModuleFile(const MusicFile: string);
@@ -83,6 +83,10 @@ begin
     ZxTunePlayer := ZXTune_CreatePlayer(ZxTuneModule);
     if ZxTunePlayer = nil then
       raise Exception.Create('Failed to create ZXTune player');
+
+
+    ZXTune_SetPlayerLoopTrack(ZxTunePlayer, 1);
+
   except
     on E: Exception do
     begin
@@ -91,7 +95,7 @@ begin
     end;
   end;
 end;
-
+{
 function GetPosition: Integer;
 var
   Samples: NativeUInt;
@@ -104,7 +108,7 @@ begin
     if ZxTunePlayer <> nil then
     begin
       Samples := ZXTune_GetCurrentPosition(ZxTunePlayer);
-      if not ZXTune_GetPlayerParameterInt(ZxTunePlayer, 'sound.frequency', Frequency) then
+    //  if not ZXTune_GetPlayerParameterInt(ZxTunePlayer, 'sound.frequency', Frequency) then
         Frequency := DEFAULT_FREQ;
       Result := Round((Samples / DEFAULT_CHANNELS) / Frequency * 1000)*2;
     end;
@@ -112,7 +116,8 @@ begin
     PositionLock.Leave;
   end;
 end;
-
+}
+   {
 function GetDuration: Integer;
 var
   FrameDuration: Integer;
@@ -133,6 +138,8 @@ begin
     PositionLock.Leave;
   end;
 end;
+  }
+
 
 procedure FormatTime(ms: Integer; out Minutes, Seconds: Integer);
 begin
@@ -150,6 +157,7 @@ var
   ProgressPos: Integer;
   ProgressBar: string;
   i: Integer;
+  testPm: Integer;
 begin
   // Выводим информацию о модуле только один раз
   if not InfoShown then
@@ -164,8 +172,8 @@ begin
     InfoShown := True;
   end;
 
-  PosMs := GetPosition;
-  DurationMs := GetDuration;
+  PosMs := ZXTune_GetPositionMs(ZxTunePlayer, @ModuleInfo);
+  DurationMs := ZXTune_GetDurationMs(ZxTunePlayer, @ModuleInfo);
 
   FormatTime(PosMs, PosMin, PosSec);
   FormatTime(DurationMs, DurMin, DurSec);
@@ -191,6 +199,10 @@ begin
   GotoXY(1, 7);  // Перемещаем курсор на строку после статической информации
   Write(Format('Position: %d:%.2d / %d:%.2d %s',
     [PosMin, PosSec, DurMin, DurSec, ProgressBar]), '      '); // Добавляем пробелы для очистки
+
+  // Parameters::ZXTune::Sound::FRAMEDURATION
+
+
 end;
 
 
@@ -217,6 +229,9 @@ begin
 
   LoadModuleFile(Filename);
 
+     // if ZXTune_SetPlayerLoopTrack(ZxTunePlayer,  1) then
+    // writeln(ZXTune_GetPlayerLoopTrack(ZxTunePlayer));
+
   LastUpdate := GetTickCount64;
   while not ShouldExit do
   begin
@@ -225,9 +240,14 @@ begin
 
     if GetTickCount64 - LastUpdate >= POSITION_UPDATE_INTERVAL then
     begin
-
-      ShowPosition;
+     /// writeln(ModuleInfo.LoopPosition);
+      writeln(ZXTune_GetDurationMs(ZxTunePlayer,@ModuleInfo));
+       ShowPosition;
+      writeln(ZXTune_GetPositionMs(ZxTunePlayer, @ModuleInfo));
+   //   writeln(GetDuration);
       LastUpdate := GetTickCount64;
+
+
     end;
 
     if KeyPressed then

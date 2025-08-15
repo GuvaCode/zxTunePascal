@@ -12,7 +12,7 @@
 
 #include <stddef.h>
 #include <string>
-
+#include <cstdint>  // Добавляем для uint32_t
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -64,13 +64,17 @@ ZXTUNE_API void ZXTune_DestroyPlayer(ZXTuneHandle player);
 // returns actually rendered bytes
 ZXTUNE_API int ZXTune_RenderSound(ZXTuneHandle player, void* buffer, size_t samples);
 ZXTUNE_API int ZXTune_SeekSound(ZXTuneHandle player, size_t sample);
+
 ZXTUNE_API bool ZXTune_ResetSound(ZXTuneHandle player);
 
 ZXTUNE_API bool ZXTune_GetPlayerParameterInt(ZXTuneHandle player, const char* paramName, int paramValue);
 ZXTUNE_API bool ZXTune_SetPlayerParameterInt(ZXTuneHandle player, const char* paramName, int paramValue);
 
 ZXTUNE_API long ZXTune_GetDuration(ZXTuneHandle player);
-ZXTUNE_API size_t ZXTune_GetCurrentPosition(ZXTuneHandle player);  
+ZXTUNE_API size_t ZXTune_GetCurrentPosition(ZXTuneHandle player); 
+
+ZXTUNE_API long ZXTune_GetPlayerLoopTrack(ZXTuneHandle player);
+ZXTUNE_API bool ZXTune_SetPlayerLoopTrack(ZXTuneHandle player, int paramValue);
 
 
 #ifdef __cplusplus

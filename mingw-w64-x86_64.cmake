@@ -1,28 +1,25 @@
-# Static Windows 64-bit toolchain with MinGW-w64
-set(CMAKE_SYSTEM_NAME Windows)
-set(TOOLCHAIN_PREFIX x86_64-w64-mingw32)
+# Sample toolchain file for building for Windows from an Ubuntu Linux system.
+#
+# Typical usage:
+#    *) install cross compiler: `sudo apt-get install mingw-w64`
+#    *) cd build
+#    *) cmake -DCMAKE_TOOLCHAIN_FILE=mingw-w64-x86_64.cmake -DRGIZMO_BUILD_SHARED=ON -DRGIZMO_BUILD_EXAMPLES=OFF ..
+# This is free and unencumbered software released into the public domain.
 
-# Компиляторы
-set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
-set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++)
-set(CMAKE_RC_COMPILER ${TOOLCHAIN_PREFIX}-windres)
+set (CMAKE_SYSTEM_NAME Windows)
+set (TOOLCHAIN_PREFIX x86_64-w64-mingw32)
 
-# Пути поиска
-set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
+# cross compilers to use for C, C++
+set (CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
+set (CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++)
+set (CMAKE_RC_COMPILER ${TOOLCHAIN_PREFIX}-windres)
 
-# Настройки FIND
-set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+# target environment on the build host system
+set (CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
 
-# Критически важные настройки для статической линковки
-set(CMAKE_EXE_LINKER_FLAGS_INIT "-static -static-libgcc -static-libstdc++ -Wl,--subsystem,windows")
-set(CMAKE_SHARED_LINKER_FLAGS_INIT "-static -static-libgcc -static-libstdc++ -Wl,--subsystem,windows")
-set(CMAKE_MODULE_LINKER_FLAGS_INIT "-static -static-libgcc -static-libstdc++ -Wl,--subsystem,windows")
+# modify default behavior of FIND_XXX() commands
+set (CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set (CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set (CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-# Дополнительные флаги компиляции
-set(CMAKE_CXX_FLAGS "-mwin32 -mthreads")
-set(CMAKE_C_FLAGS "-mwin32 -mthreads")
 
-# Отключаем тестовую компиляцию GUI-приложения
-set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)

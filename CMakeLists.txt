@@ -6,7 +6,7 @@ project(${NAME})
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
-# set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Release)
 # Используем локальный zxtune-r4310 вместо скачивания
 set(NAME_VERSIONED "${NAME}-${VERSION}")
 set(EXTERNAL_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/zxtune-r4310")  # Путь к локальной копии

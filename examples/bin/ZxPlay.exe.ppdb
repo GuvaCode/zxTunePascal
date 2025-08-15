@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#Author: vadim
+#ZxPlay.exe
+#Rating=1-5
+export PW_VULKAN_USE="2"
+export PW_WINE_USE="PROTON_LG_10-8"
+export PW_PREFIX_NAME="DEFAULT"
+export PORTPROTON_NAME="ZxPlay"
+export FILE_DESCRIPTION=""
+export FILE_SHA256SUM="4491d3b3b44f6f130c82d2debdd91c225c132bde758eb7592b2eb27945f4ae0e"

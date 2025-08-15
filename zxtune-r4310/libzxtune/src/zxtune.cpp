@@ -434,7 +434,7 @@ bool ZXTune_SetPlayerParameterInt(ZXTuneHandle player, const char* paramName, in
     const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
     const Parameters::Modifier::Ptr props = wrapper->GetParameters();
     const Parameters::NameType name(paramName);
-    props->SetValue(name, paramValue);
+    props->SetValue(name, paramValue); 
     return true;
   }
   catch (const Error&)
@@ -446,4 +446,65 @@ bool ZXTune_SetPlayerParameterInt(ZXTuneHandle player, const char* paramName, in
     return false;
   }
 }
+
+
+long ZXTune_GetDuration(ZXTuneHandle player)
+{
+    const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
+    const Parameters::Accessor::Ptr props = wrapper->GetParameters();
+    Parameters::IntType frameDuration = Parameters::ZXTune::Sound::FRAMEDURATION_DEFAULT;
+    props->FindValue(Parameters::ZXTune::Sound::FRAMEDURATION, frameDuration);
+    return frameDuration;
+}
+
+// Add this at the end of the file, before the last closing brace
+size_t ZXTune_GetCurrentPosition(ZXTuneHandle player)
+{
+   const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
+   return wrapper->GetBuffer()->GetCurrentSample();
+}
+
+
+long ZXTune_GetPlayerLoopTrack(ZXTuneHandle player)
+{
+    try
+    {
+        const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
+        const Parameters::Accessor::Ptr props = wrapper->GetParameters();
+        Parameters::IntType loopValue = 0;
+        if (props->FindValue(Parameters::ZXTune::Sound::LOOPED, loopValue))
+        {
+            return loopValue;
+        }
+        return 0; // default value if not set
+    }
+    catch (const Error&)
+    {
+        return 0;
+    }
+    catch (const std::exception&)
+    {
+        return 0;
+    }
+}
+
+bool ZXTune_SetPlayerLoopTrack(ZXTuneHandle player, int paramValue)
+{
+  try
+  {
+    const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
+    const Parameters::Modifier::Ptr props = wrapper->GetParameters();
+    props->SetValue(Parameters::ZXTune::Sound::LOOPED, paramValue);
+    return true;
+  }
+  catch (const Error&)
+  {
+    return false;
+  }
+  catch (const std::exception&)
+  {
+    return false;
+  }
+}
+
 
