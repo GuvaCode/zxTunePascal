@@ -56,14 +56,21 @@ var
   ZXTune_GetPlayerParameterInt: function(player: ZXTuneHandle; paramName: PAnsiChar; var paramValue: Integer): Boolean; cdecl;
   ZXTune_SetPlayerParameterInt: function(player: ZXTuneHandle; paramName: PAnsiChar; paramValue: Integer): Boolean; cdecl;
 
-  ZXTune_GetCurrentPosition: function(player: ZXTuneHandle): NativeUInt; cdecl;
+  ZXTune_GetCurrentPosition: function(player: ZXTuneHandle): LongInt; cdecl;
   ZXTune_GetDuration: function(player: ZXTuneHandle): LongInt; cdecl;
+
+  ZXTune_GetDurationMs: function(player: ZXTuneHandle; const info: PZXTuneModuleInfo): LongInt; cdecl;
+  ZXTune_GetPositionMs: function(player: ZXTuneHandle; const moduleInfo: PZXTuneModuleInfo): LongInt cdecl;
 
   ZXTune_SetPlayerLoopTrack: function(player: ZXTuneHandle; paramValue: Integer): Boolean; cdecl;
   ZXTune_GetPlayerLoopTrack: function(player: ZXTuneHandle): LongInt; cdecl;
 
-  function ZXTune_GetDurationMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
-  function ZXTune_GetPositionMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
+  ZXTune_GetSoundFrequency: function(player: ZXTuneHandle): LongInt; cdecl;
+
+  ZXTune_SetDoneSamples: function(player: ZXTuneHandle; const moduleInfo: PZXTuneModuleInfo): Boolean; cdecl;
+
+ // function ZXTune_GetDurationMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
+ // function ZXTune_GetPositionMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
 
 procedure LoadZXTuneLibrary(const LibraryName: string = DEFAULT_LIB_NAME);
 function ZXTuneLoaded: Boolean;
@@ -77,6 +84,7 @@ begin
   pointer(fn_var) := GetProcedureAddress(library_handle, fn_name);
 end;
 
+{
 function ZXTune_GetDurationMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
 const DEFAULT_FRAME_DURATION = 20000; // 20ms in microseconds
 var
@@ -97,7 +105,8 @@ begin
     raise;
   end;
 end;
-
+}
+ {
 function ZXTune_GetPositionMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
 const
   DEFAULT_CHANNELS = 2;
@@ -105,8 +114,6 @@ const
 var
   Samples: NativeUInt;
   Frequency: Integer;
-  DurationMs: Integer;
-  PositionInLoop: Integer;
 begin
   Result := 0;
   Frequency := DEFAULT_FREQ; // Устанавливаем значение по умолчанию
@@ -115,28 +122,16 @@ begin
     Exit;
 
   try
-    // Получаем текущую позицию в сэмплах
-    Samples := ZXTune_GetCurrentPosition(player);
-
-    // Пробуем получить реальную частоту, если не получается - используем значение по умолчанию
-  //  if not ZXTune_GetPlayerParameterInt(player, 'sound.frequency', Frequency) then
-      Frequency := DEFAULT_FREQ;
-
-    // Вычисляем позицию в миллисекундах
-    PositionInLoop := Round((Samples / DEFAULT_CHANNELS) / Frequency * 1000) * 2;
-
-    // Получаем общую длительность трека
-    DurationMs := ZXTune_GetDurationMs(player, info);
-
-    // Если трек зациклен и текущая позиция превышает длительность
-    if (ZXTune_GetPlayerLoopTrack(player) = 1 ) and (PositionInLoop > DurationMs) then
     begin
-      Result := info^.LoopPosition * 1000 + (PositionInLoop mod DurationMs);
-    end
-    else
-    begin
-      Result := PositionInLoop;
+      // Get current position in samples
+      Samples := ZXTune_GetCurrentPosition(player);
+
+      // Get current frequency setting
+      Frequency := ZXTune_GetSoundFrequency(player);
+
+      Result := Round((Samples / DEFAULT_CHANNELS) / Frequency * 1000) * 2;
     end;
+
   except
     on E: Exception do
     begin
@@ -145,7 +140,7 @@ begin
     end;
   end;
 end;
-
+ }
 procedure LoadZXTuneLibrary(const LibraryName: string);
 begin
   if library_handle <> NilHandle then
@@ -182,10 +177,18 @@ begin
 
     LoadProc(ZXTune_GetDuration, 'ZXTune_GetDuration');
     LoadProc(ZXTune_GetCurrentPosition, 'ZXTune_GetCurrentPosition');
+    LoadProc(ZXTune_GetPositionMs, 'ZXTune_GetPositionMs');
 
+    LoadProc(ZXTune_GetDurationMs, 'ZXTune_GetDurationMs');
 
     LoadProc(ZXTune_GetPlayerLoopTrack, 'ZXTune_GetPlayerLoopTrack');
     LoadProc(ZXTune_SetPlayerLoopTrack, 'ZXTune_SetPlayerLoopTrack');
+
+    LoadProc(ZXTune_SetDoneSamples, 'ZXTune_SetDoneSamples');
+
+    LoadProc(ZXTune_GetSoundFrequency, 'ZXTune_GetSoundFrequency');
+
+
 
   except
     UnloadLibrary(library_handle);

@@ -145,6 +145,12 @@ namespace
       Buffer.Reset();
       DoneSamples = 0;
     }
+
+    void SetDoneSamples(std::size_t newCount)
+    {
+        DoneSamples = newCount;
+    }
+
   private:
     CycleBuffer<Sound::Sample> Buffer;
     std::size_t DoneSamples;
@@ -502,6 +508,153 @@ bool ZXTune_SetPlayerLoopTrack(ZXTuneHandle player, int paramValue)
     return false;
   }
   catch (const std::exception&)
+  {
+    return false;
+  }
+}
+
+long ZXTune_GetDurationMs(ZXTuneHandle player, const ZXTuneModuleInfo* info)
+{
+  const long DEFAULT_FRAME_DURATION = 20000; // 20ms in microseconds
+  
+  try
+  {
+    Require(info != nullptr);
+    const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
+    const Parameters::Accessor::Ptr props = wrapper->GetParameters();
+
+    Parameters::IntType frameDuration = Parameters::ZXTune::Sound::FRAMEDURATION_DEFAULT;
+    props->FindValue(Parameters::ZXTune::Sound::FRAMEDURATION, frameDuration);
+
+    if (frameDuration <= 0)
+    {
+      frameDuration = DEFAULT_FRAME_DURATION;
+    }
+
+    return static_cast<long>((info->Frames * frameDuration) / 1000);
+  }
+  catch (const Error&)
+  {
+    return 0;
+  }
+  catch (const std::exception&)
+  {
+    return 0;
+  }
+}
+
+bool ZXTune_SetDoneSamples(ZXTuneHandle player, size_t setSample)
+{
+  try
+  {
+    const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
+    wrapper->GetBuffer()->SetDoneSamples(setSample);
+    return true;
+  }
+  catch (const Error&)
+  {
+    return false;
+  }
+  catch (const std::exception&)
+  {
+    return false;
+  }
+}
+
+long ZXTune_GetSoundFrequency(ZXTuneHandle player)
+{
+  const long DEFAULT_SOUND_FREQUENCY = 44100; // Default frequency if not specified
+  
+  try
+  {
+    const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
+    const Parameters::Accessor::Ptr props = wrapper->GetParameters();
+
+    Parameters::IntType frequency = DEFAULT_SOUND_FREQUENCY;
+    if (!props->FindValue(Parameters::ZXTune::Sound::FREQUENCY, frequency))
+    {
+      frequency = DEFAULT_SOUND_FREQUENCY;
+    }
+
+    return static_cast<long>(frequency);
+  }
+  catch (const Error&)
+  {
+    return DEFAULT_SOUND_FREQUENCY;
+  }
+  catch (const std::exception&)
+  {
+    return DEFAULT_SOUND_FREQUENCY;
+  }
+}
+
+long ZXTune_GetPositionMs(ZXTuneHandle player, const ZXTuneModuleInfo* moduleInfo)
+{
+  try {
+    const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
+    const size_t currentSamples = wrapper->GetBuffer()->GetCurrentSample();
+    const long freq = ZXTune_GetSoundFrequency(player);
+    
+    if (freq <= 0) return 0;
+    
+    return (currentSamples * 1000) / freq;
+  }
+  catch (...) {
+    return 0;
+  }
+}
+
+bool ZXTune_SetDoneSamples(ZXTuneHandle player, const ZXTuneModuleInfo* moduleInfo)
+{
+  try 
+  {
+    Require(player != nullptr);
+    Require(moduleInfo != nullptr);
+    
+    const PlayerWrapper::Ptr wrapper = PlayersCache::Instance().Get(player);
+    BufferRender::Ptr buffer = wrapper->GetBuffer();
+    const long freq = ZXTune_GetSoundFrequency(player);
+    
+    if (freq <= 0) return false;
+    
+    // Получаем текущую позицию в семплах
+    const size_t currentSamples = buffer->GetCurrentSample();
+    
+    // Рассчитываем общую длительность в семплах
+    const size_t totalSamples = (ZXTune_GetDuration(player) * moduleInfo->Frames * freq) / 1000000;
+    
+    // Если трек закончился или достиг конца
+    if (currentSamples >= totalSamples) 
+    {
+      // Если включен луп
+      if (ZXTune_GetPlayerLoopTrack(player) == 1) 
+      {
+        // Проверяем валидность LoopFrame
+        if (moduleInfo->LoopFrame >= 0 && moduleInfo->LoopFrame < moduleInfo->Frames)
+        {
+          // Рассчитываем позицию лупа в семплах
+          const size_t loopSamples = (ZXTune_GetDuration(player) * moduleInfo->LoopFrame * freq) / 1000000;
+          
+          // Убеждаемся, что не выходим за пределы
+          const size_t safeLoopSamples = std::min(loopSamples, totalSamples - 1);
+          buffer->SetDoneSamples(safeLoopSamples);
+          return true;
+        }
+      }
+      
+      // Сбрасываем в начало, если луп выключен или невалидный LoopFrame
+      buffer->SetDoneSamples(0);
+      return true;
+    }
+    
+    // Если не достигли конца, ничего не меняем
+    return true;
+  }
+  catch (const Error&) 
+  {
+    return false;
+  }
+  catch (const std::exception&) 
   {
     return false;
   }

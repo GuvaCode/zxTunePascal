@@ -73,8 +73,15 @@ ZXTUNE_API bool ZXTune_SetPlayerParameterInt(ZXTuneHandle player, const char* pa
 ZXTUNE_API long ZXTune_GetDuration(ZXTuneHandle player);
 ZXTUNE_API size_t ZXTune_GetCurrentPosition(ZXTuneHandle player); 
 
+ZXTUNE_API long ZXTune_GetDurationMs(ZXTuneHandle player, const ZXTuneModuleInfo* info);
+ZXTUNE_API long ZXTune_GetPositionMs(ZXTuneHandle player, const ZXTuneModuleInfo* moduleInfo);
+
 ZXTUNE_API long ZXTune_GetPlayerLoopTrack(ZXTuneHandle player);
 ZXTUNE_API bool ZXTune_SetPlayerLoopTrack(ZXTuneHandle player, int paramValue);
+
+ZXTUNE_API long ZXTune_GetSoundFrequency(ZXTuneHandle player);
+
+ZXTUNE_API bool ZXTune_SetDoneSamples(ZXTuneHandle player, const ZXTuneModuleInfo* moduleInfo);
 
 
 #ifdef __cplusplus

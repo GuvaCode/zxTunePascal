@@ -95,59 +95,12 @@ begin
     end;
   end;
 end;
-{
-function GetPosition: Integer;
-var
-  Samples: NativeUInt;
-  Frequency: Integer;
-begin
-  Result := 0;
-  Frequency := 0;
-  PositionLock.Enter;
-  try
-    if ZxTunePlayer <> nil then
-    begin
-      Samples := ZXTune_GetCurrentPosition(ZxTunePlayer);
-    //  if not ZXTune_GetPlayerParameterInt(ZxTunePlayer, 'sound.frequency', Frequency) then
-        Frequency := DEFAULT_FREQ;
-      Result := Round((Samples / DEFAULT_CHANNELS) / Frequency * 1000)*2;
-    end;
-  finally
-    PositionLock.Leave;
-  end;
-end;
-}
-   {
-function GetDuration: Integer;
-var
-  FrameDuration: Integer;
-begin
-  Result := 0;
-  PositionLock.Enter;
-  try
-    if ZxTuneModule <> nil then
-    begin
-      // Get frame duration in microseconds (default to 20ms if not available)
-      FrameDuration := ZXTune_GetDuration(ZxTunePlayer);
-      if FrameDuration <= 0 then
-        FrameDuration := DEFAULT_FRAME_DURATION; // Default 20ms frame duration
-      // Calculate duration: (frames * frame_duration) / 1000
-      Result := Round((ModuleInfo.Frames * FrameDuration) / 1000);
-    end;
-  finally
-    PositionLock.Leave;
-  end;
-end;
-  }
-
 
 procedure FormatTime(ms: Integer; out Minutes, Seconds: Integer);
 begin
   Minutes := ms div 60000;
   Seconds := (ms div 1000) mod 60;
 end;
-
-
 
 procedure ShowPosition;
 var
@@ -157,19 +110,26 @@ var
   ProgressPos: Integer;
   ProgressBar: string;
   i: Integer;
-  testPm: Integer;
+
 begin
   // Выводим информацию о модуле только один раз
   if not InfoShown then
   begin
     ClrScr;
     WriteLn('ZX Tune Player. ', ZXTune_GetVersion);
-    WriteLn('');
-    WriteLn('Module: ',ExtractFileName(ParamStr(1)));
-    WriteLn('Tempo: ', ModuleInfo.Frames);
-    WriteLn('Channels: ', ModuleInfo.Channels);
     WriteLn;
     InfoShown := True;
+
+    WriteLn('Positions: ' + IntToStr( ModuleInfo.Positions));
+    WriteLn('Loop Position: ' + IntToStr( ModuleInfo.LoopPosition));
+    WriteLn('Frames: ' + IntToStr( ModuleInfo.Frames));
+    WriteLn('Loop Frame: ' + IntToStr(  ModuleInfo.LoopFrame));
+    WriteLn('Channels: ' + IntToStr(  ModuleInfo.Channels));
+    WriteLn('Initial Tempo: ' + IntToStr(  ModuleInfo.InitialTempo));
+
+
+
+
   end;
 
   PosMs := ZXTune_GetPositionMs(ZxTunePlayer, @ModuleInfo);
@@ -196,7 +156,7 @@ begin
   ProgressBar := ProgressBar + ']';
 
   // Выводим только изменяемую часть (позицию и прогресс-бар)
-  GotoXY(1, 7);  // Перемещаем курсор на строку после статической информации
+  GotoXY(1, 12);  // Перемещаем курсор на строку после статической информации
   Write(Format('Position: %d:%.2d / %d:%.2d %s',
     [PosMin, PosSec, DurMin, DurSec, ProgressBar]), '      '); // Добавляем пробелы для очистки
 
@@ -215,7 +175,7 @@ end;
 procedure PlayFile(Filename: string);
 var
   Stream: TAudioStream;
-  LastUpdate: QWord;
+  LastUpdate: QWord;  test:double;
 begin
   InitAudioDevice();
   SetAudioStreamBufferSizeDefault(BUFFER_SIZE);
@@ -229,9 +189,6 @@ begin
 
   LoadModuleFile(Filename);
 
-     // if ZXTune_SetPlayerLoopTrack(ZxTunePlayer,  1) then
-    // writeln(ZXTune_GetPlayerLoopTrack(ZxTunePlayer));
-
   LastUpdate := GetTickCount64;
   while not ShouldExit do
   begin
@@ -241,12 +198,19 @@ begin
     if GetTickCount64 - LastUpdate >= POSITION_UPDATE_INTERVAL then
     begin
      /// writeln(ModuleInfo.LoopPosition);
-      writeln(ZXTune_GetDurationMs(ZxTunePlayer,@ModuleInfo));
-       ShowPosition;
-      writeln(ZXTune_GetPositionMs(ZxTunePlayer, @ModuleInfo));
-   //   writeln(GetDuration);
+
+      ShowPosition;
+      WriteLn('');
+
+      writeln(ZXTune_GetCurrentPosition(ZxTunePlayer));
+
+      writeln('Position Ms: '+ IntToStr(ZXTune_GetPositionMs(ZxTunePlayer, @ModuleInfo)));
+      writeln('Total Ms:' + IntToStr (ZXTune_GetDurationMs(ZxTunePlayer, @ModuleInfo)));
+
       LastUpdate := GetTickCount64;
 
+     if ZXTune_SetDoneSamples(ZxTunePlayer, @ModuleInfo) then
+     Continue;
 
     end;
 
@@ -278,6 +242,7 @@ begin
     if SysUtils.FileExists(ParamStr(1)) then
     begin
       PlayFile(ParamStr(1));
+      ClrScr;
       ExitCode := 0;
     end
     else
