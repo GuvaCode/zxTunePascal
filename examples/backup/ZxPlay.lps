@@ -531,10 +531,6 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="../binding/libzxtune.pas"/>
-        <Caret Line="133" TopLine="125"/>
-      </Position>
-      <Position>
-        <Filename Value="../binding/libzxtune.pas"/>
         <Caret Line="124" Column="44" TopLine="115"/>
       </Position>
       <Position>
@@ -648,6 +644,10 @@
       <Position>
         <Filename Value="ZxPlay.lpr"/>
         <Caret Line="245" Column="14" TopLine="238"/>
+      </Position>
+      <Position>
+        <Filename Value="ZxPlay.lpr"/>
+        <Caret Line="208" Column="88" TopLine="199"/>
       </Position>
     </JumpHistory>
     <RunParams>

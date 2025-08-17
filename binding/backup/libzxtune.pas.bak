@@ -60,14 +60,15 @@ var
   ZXTune_GetDuration: function(player: ZXTuneHandle): LongInt; cdecl;
 
   ZXTune_GetDurationMs: function(player: ZXTuneHandle; const info: PZXTuneModuleInfo): LongInt; cdecl;
+  ZXTune_GetPositionMs: function(player: ZXTuneHandle; const moduleInfo: PZXTuneModuleInfo): LongInt cdecl;
 
   ZXTune_SetPlayerLoopTrack: function(player: ZXTuneHandle; paramValue: Integer): Boolean; cdecl;
   ZXTune_GetPlayerLoopTrack: function(player: ZXTuneHandle): LongInt; cdecl;
 
-  ZXTune_SetDoneSamples: function(player:ZXTuneHandle; setSample: NativeUInt): boolean;
-
   ZXTune_GetSoundFrequency: function(player: ZXTuneHandle): LongInt; cdecl;
-  ZXTune_GetPositionMs: function(player: ZXTuneHandle; const moduleInfo: PZXTuneModuleInfo): LongInt cdecl;
+
+  ZXTune_SetDoneSamples: function(player: ZXTuneHandle; const moduleInfo: PZXTuneModuleInfo): Boolean; cdecl;
+
  // function ZXTune_GetDurationMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
  // function ZXTune_GetPositionMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
 
@@ -186,6 +187,8 @@ begin
     LoadProc(ZXTune_SetDoneSamples, 'ZXTune_SetDoneSamples');
 
     LoadProc(ZXTune_GetSoundFrequency, 'ZXTune_GetSoundFrequency');
+
+
 
   except
     UnloadLibrary(library_handle);

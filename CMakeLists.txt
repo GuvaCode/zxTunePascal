@@ -124,8 +124,6 @@ file(GLOB SOURCES
         ${EXTERNAL_SOURCE_DIR}/src/tools/text/*.cpp
         )
 
-
-
 # Проверяем, что файлы найдены
 if(NOT SOURCES)
     message(FATAL_ERROR "Не найдены исходные файлы в ${EXTERNAL_SOURCE_DIR}. Проверьте структуру каталогов!")
