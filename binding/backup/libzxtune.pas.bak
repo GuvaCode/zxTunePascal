@@ -69,8 +69,6 @@ var
 
   ZXTune_SetDoneSamples: function(player: ZXTuneHandle; const moduleInfo: PZXTuneModuleInfo): Boolean; cdecl;
 
- // function ZXTune_GetDurationMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
- // function ZXTune_GetPositionMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
 
 procedure LoadZXTuneLibrary(const LibraryName: string = DEFAULT_LIB_NAME);
 function ZXTuneLoaded: Boolean;
@@ -84,63 +82,7 @@ begin
   pointer(fn_var) := GetProcedureAddress(library_handle, fn_name);
 end;
 
-{
-function ZXTune_GetDurationMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
-const DEFAULT_FRAME_DURATION = 20000; // 20ms in microseconds
-var
-  FrameDuration: Integer;
-begin
-  Result := 0;
-  try
-    if info <> nil then
-    begin
-      // Get frame duration in microseconds (default to 20ms if not available)
-      FrameDuration := ZXTune_GetDuration(player);
-      if FrameDuration <= 0 then
-        FrameDuration := DEFAULT_FRAME_DURATION; // Default 20ms frame duration
-      // Calculate duration: (frames * frame_duration) / 1000
-      Result := Round((info^.Frames * FrameDuration) / 1000);
-    end;
-  except
-    raise;
-  end;
-end;
-}
- {
-function ZXTune_GetPositionMs(player: ZXTuneHandle; info: PZXTuneModuleInfo): Integer;
-const
-  DEFAULT_CHANNELS = 2;
-  DEFAULT_FREQ = 44100;
-var
-  Samples: NativeUInt;
-  Frequency: Integer;
-begin
-  Result := 0;
-  Frequency := DEFAULT_FREQ; // Устанавливаем значение по умолчанию
 
-  if (player = nil) or (info = nil) then
-    Exit;
-
-  try
-    begin
-      // Get current position in samples
-      Samples := ZXTune_GetCurrentPosition(player);
-
-      // Get current frequency setting
-      Frequency := ZXTune_GetSoundFrequency(player);
-
-      Result := Round((Samples / DEFAULT_CHANNELS) / Frequency * 1000) * 2;
-    end;
-
-  except
-    on E: Exception do
-    begin
-      // Логирование ошибки при необходимости
-      Result := 0;
-    end;
-  end;
-end;
- }
 procedure LoadZXTuneLibrary(const LibraryName: string);
 begin
   if library_handle <> NilHandle then

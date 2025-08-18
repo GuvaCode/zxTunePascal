@@ -16,7 +16,7 @@ binary/*
 
 # other git repo
 build_linux
-buld64
+build64
 build32
 binding/backup
 *.bak
@@ -24,13 +24,14 @@ binding/backup
 .DS_Store
 #*.dylib
 
+zxtune-r4310.tar
 
 
 # laz
 backup/
 
 *.bak
-
+*.o
 #examples/
 lib/
 templates/standard_game/

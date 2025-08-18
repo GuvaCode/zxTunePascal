@@ -95,7 +95,7 @@ begin
   try
     // Common functions
     LoadProc(ZXTune_GetVersion, 'ZXTune_GetVersion');
-
+  {
     // Data operating
     LoadProc(ZXTune_CreateData, 'ZXTune_CreateData');
     LoadProc(ZXTune_CloseData, 'ZXTune_CloseData');
@@ -130,7 +130,7 @@ begin
 
     LoadProc(ZXTune_GetSoundFrequency, 'ZXTune_GetSoundFrequency');
 
-
+  }
 
   except
     UnloadLibrary(library_handle);

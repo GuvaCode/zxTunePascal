@@ -7,10 +7,9 @@
       <Unit>
         <Filename Value="ZxPlay.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="74"/>
-        <CursorPos X="88" Y="208"/>
-        <UsageCount Value="57"/>
+        <TopLine Value="133"/>
+        <CursorPos X="36" Y="9"/>
+        <UsageCount Value="59"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -33,15 +32,16 @@
         <EditorIndex Value="2"/>
         <TopLine Value="404"/>
         <CursorPos X="41" Y="416"/>
-        <UsageCount Value="15"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../binding/libzxtune.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="58"/>
-        <CursorPos X="10" Y="64"/>
-        <UsageCount Value="28"/>
+        <TopLine Value="89"/>
+        <CursorPos Y="92"/>
+        <UsageCount Value="29"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -112,7 +112,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="28"/>
         <CursorPos X="38" Y="32"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="../zxtune-r4310/src/module/track_state.h"/>
@@ -469,21 +469,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="97"/>
         <CursorPos X="72" Y="100"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="../../../fpcupdeluxe/fpcupdeluxe/fpcsrc/rtl/inc/systemh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="789"/>
         <CursorPos X="3" Y="448"/>
-        <UsageCount Value="15"/>
+        <UsageCount Value="14"/>
       </Unit>
       <Unit>
         <Filename Value="../../../fpcupdeluxe/fpcupdeluxe/fpcsrc/packages/fcl-base/src/syncobjs.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="11"/>
         <CursorPos X="14" Y="28"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="12"/>
       </Unit>
       <Unit>
         <Filename Value="../zxtune-r4310/src/core/test/modinfo/main.cpp"/>
