@@ -34,16 +34,16 @@ type
 var
   // Common functions
   ZXTune_GetVersion: function: PAnsiChar; cdecl;
-  
+
   // Data operating
   ZXTune_CreateData: function(const data: Pointer; size: NativeUInt): ZXTuneHandle; cdecl;
   ZXTune_CloseData: procedure(data: ZXTuneHandle); cdecl;
-  
+
   // Modules operating
   ZXTune_OpenModule: function(data: ZXTuneHandle): ZXTuneHandle; cdecl;
   ZXTune_CloseModule: procedure(module: ZXTuneHandle); cdecl;
   ZXTune_GetModuleInfo: function(module: ZXTuneHandle; var info: ZXTuneModuleInfo): Boolean; cdecl;
-  
+
   // Players operating
   ZXTune_CreatePlayer: function(module: ZXTuneHandle): ZXTuneHandle; cdecl;
   ZXTune_DestroyPlayer: procedure(player: ZXTuneHandle); cdecl;
@@ -68,6 +68,10 @@ var
   ZXTune_GetSoundFrequency: function(player: ZXTuneHandle): LongInt; cdecl;
 
   ZXTune_SetDoneSamples: function(player: ZXTuneHandle; const moduleInfo: PZXTuneModuleInfo): Boolean; cdecl;
+
+  ZXTune_GetModuleAttribute: function(player: ZXTuneHandle; attrName: PAnsiChar; buffer: PAnsiChar;  bufferSize: NativeUInt): Boolean; cdecl;
+
+
 
 
 procedure LoadZXTuneLibrary(const LibraryName: string = DEFAULT_LIB_NAME);
@@ -95,16 +99,16 @@ begin
   try
     // Common functions
     LoadProc(ZXTune_GetVersion, 'ZXTune_GetVersion');
-  {
+
     // Data operating
     LoadProc(ZXTune_CreateData, 'ZXTune_CreateData');
     LoadProc(ZXTune_CloseData, 'ZXTune_CloseData');
-    
+
     // Modules operating
     LoadProc(ZXTune_OpenModule, 'ZXTune_OpenModule');
     LoadProc(ZXTune_CloseModule, 'ZXTune_CloseModule');
     LoadProc(ZXTune_GetModuleInfo, 'ZXTune_GetModuleInfo');
-    
+
     // Players operating
     LoadProc(ZXTune_CreatePlayer, 'ZXTune_CreatePlayer');
     LoadProc(ZXTune_DestroyPlayer, 'ZXTune_DestroyPlayer');
@@ -130,7 +134,8 @@ begin
 
     LoadProc(ZXTune_GetSoundFrequency, 'ZXTune_GetSoundFrequency');
 
-  }
+    LoadProc(ZXTune_GetModuleAttribute, 'ZXTune_GetModuleAttribute');
+
 
   except
     UnloadLibrary(library_handle);
