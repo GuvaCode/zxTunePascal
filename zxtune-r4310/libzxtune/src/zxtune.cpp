@@ -26,6 +26,7 @@
 #include <parameters/container.h>
 #include <platform/version/api.h>
 #include <sound/sound_parameters.h>
+#include <module/attributes.h> //
 //std includes
 #include <map>
 //boost includes
@@ -659,5 +660,40 @@ bool ZXTune_SetDoneSamples(ZXTuneHandle player, const ZXTuneModuleInfo* moduleIn
     return false;
   }
 }
+
+bool ZXTune_GetModuleAttribute(ZXTuneHandle module, const char* attrName, char* buffer, size_t bufferSize)
+{
+  try
+  {
+    Require(attrName != nullptr);
+    Require(buffer != nullptr);
+    Require(bufferSize > 0);
+    
+    const Module::Holder::Ptr holder = ModulesCache::Instance().Get(module);
+    
+    // Получаем значение атрибута
+    String value;
+    if (!holder->GetModuleProperties()->FindValue(String(attrName), value))
+    {
+      return false; // Атрибут не найден
+    }
+    
+    // Копируем значение в буфер
+    const size_t copySize = std::min(value.size(), bufferSize - 1);
+    std::memcpy(buffer, value.c_str(), copySize);
+    buffer[copySize] = '\0'; // Добавляем нулевой терминатор
+    
+    return true;
+  }
+  catch (const Error&)
+  {
+    return false;
+  }
+  catch (const std::exception&)
+  {
+    return false;
+  }
+}
+
 
 

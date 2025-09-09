@@ -83,6 +83,8 @@ ZXTUNE_API long ZXTune_GetSoundFrequency(ZXTuneHandle player);
 
 ZXTUNE_API bool ZXTune_SetDoneSamples(ZXTuneHandle player, const ZXTuneModuleInfo* moduleInfo);
 
+ZXTUNE_API bool ZXTune_GetModuleAttribute(ZXTuneHandle module, const char* attrName, char* buffer, size_t bufferSize);
+
 
 #ifdef __cplusplus
 } //extern

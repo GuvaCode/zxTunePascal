@@ -7,7 +7,7 @@
       <Unit>
         <Filename Value="ZxPlay.lpr"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="133"/>
+        <TopLine Value="9"/>
         <CursorPos X="36" Y="9"/>
         <UsageCount Value="59"/>
         <Loaded Value="True"/>
@@ -29,17 +29,15 @@
       <Unit>
         <Filename Value="../../../Рабочий стол/rAudioClass/src/players/rzxtuneaudioplayer.pas"/>
         <UnitName Value="rZxTuneAudioPlayer"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="404"/>
-        <CursorPos X="41" Y="416"/>
+        <CursorPos X="13" Y="9"/>
         <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../binding/libzxtune.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="89"/>
         <CursorPos Y="92"/>
         <UsageCount Value="29"/>
         <Loaded Value="True"/>
